@@ -58,3 +58,42 @@ Strukturen er lagt til rette for å legge til senere:
 - Innlogging/autentisering (per nå kun én bruker)
 - Direkte e-postutsendelse
 - Kalenderintegrasjon
+
+## Publisere på Vercel
+
+Appen består av to deler som må deployes hver for seg på Vercel (én
+frontend, én backend), fordi backend trenger en ekte database i
+produksjon — Vercels servere har ikke vedvarende diskplass til SQLite-filen.
+
+### 1. Opprett en gratis Postgres-database (Neon)
+
+1. Gå til [neon.tech](https://neon.tech) og opprett et gratis prosjekt.
+2. Kopier connection-stringen (starter med `postgresql://...`).
+
+### 2. Deploy backend
+
+1. Gå til [vercel.com](https://vercel.com) → **Add New… → Project** →
+   velg dette repoet.
+2. Sett **Root Directory** til `backend`.
+3. Under **Environment Variables**, legg til:
+   - `DATABASE_URL` = connection-stringen fra Neon.
+4. Deploy. Du får en URL som `https://konsept-crm-api.vercel.app`.
+5. Test at det virker: åpne `https://konsept-crm-api.vercel.app/api/leads`
+   i nettleseren — du bør få `[]` tilbake.
+
+### 3. Deploy frontend
+
+1. Gå tilbake til Vercel → **Add New… → Project** → velg samme repo på
+   nytt.
+2. Sett **Root Directory** til `frontend` (Vercel oppdager automatisk at
+   det er et Vite-prosjekt).
+3. Under **Environment Variables**, legg til:
+   - `VITE_API_URL` = `https://konsept-crm-api.vercel.app/api`
+     (URL-en fra steg 2, med `/api` på slutten).
+4. Deploy. Du får en URL som `https://konsept-crm.vercel.app` — dette er
+   appen du bruker i det daglige.
+
+### Oppdateringer senere
+
+Push til branchen som er koblet til Vercel-prosjektene, så redeployer
+Vercel automatisk begge deler.

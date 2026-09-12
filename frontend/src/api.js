@@ -1,4 +1,7 @@
-const BASE_URL = "/api";
+// I produksjon settes VITE_API_URL til backendens fulle URL (f.eks.
+// https://konsept-crm-api.vercel.app/api). Lokalt brukes Vite-proxyen i
+// vite.config.js, som ruter /api videre til backend på localhost:8000.
+const BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
 async function request(path, options = {}) {
   const res = await fetch(`${BASE_URL}${path}`, {
