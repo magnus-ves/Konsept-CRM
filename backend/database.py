@@ -24,9 +24,26 @@ if SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
 
 # Administrerte Postgres-tjenester (Neon, Vercel Storage, Nile o.l.) krever
 # som regel SSL. Legg til sslmode=require hvis det ikke allerede er angitt.
+# Noen integrasjoner (f.eks. Supabase-tilkoblingen Vercel setter opp) legger
+# også ved ukjente spørringsparametre (som "supa=base-pooler.x") som får
+# psycopg2 til å feile - behold derfor bare kjente libpq-parametre.
+_VALID_LIBPQ_PARAMS = {
+    "sslmode",
+    "sslcert",
+    "sslkey",
+    "sslrootcert",
+    "connect_timeout",
+    "application_name",
+    "options",
+    "target_session_attrs",
+    "pgbouncer",
+}
+
 if SQLALCHEMY_DATABASE_URL.startswith("postgresql://"):
     parts = urlsplit(SQLALCHEMY_DATABASE_URL)
-    query = dict(parse_qsl(parts.query))
+    query = {
+        k: v for k, v in parse_qsl(parts.query) if k in _VALID_LIBPQ_PARAMS
+    }
     query.setdefault("sslmode", "require")
     SQLALCHEMY_DATABASE_URL = urlunsplit(
         (parts.scheme, parts.netloc, parts.path, urlencode(query), parts.fragment)
