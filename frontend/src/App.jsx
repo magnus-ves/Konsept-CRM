@@ -10,6 +10,7 @@ export default function App() {
       <header className="topbar">
         <div className="brand">
           <img src={konseptLogo} alt="Konsept" className="brand-logo" />
+          <span className="brand-suffix">· Mini-CRM</span>
         </div>
         <nav className="nav">
           <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>

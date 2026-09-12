@@ -63,6 +63,7 @@ body::before {
 .brand {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
 .brand-logo {
@@ -70,6 +71,14 @@ body::before {
   height: 28px;
   width: auto;
   filter: brightness(0) invert(1);
+}
+
+.brand-suffix {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .nav {
