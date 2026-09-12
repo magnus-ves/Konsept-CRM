@@ -25,9 +25,15 @@ app = FastAPI(title="Konsept Mini-CRM")
 
 @app.get("/api/health")
 def health():
+    import os
+
+    relevant_keys = sorted(
+        k for k in os.environ.keys() if "RESEND" in k.upper() or "EMAIL" in k.upper()
+    )
     return {
         "ok": _db_init_error is None,
         "resend_configured": bool(email_service.RESEND_API_KEY),
+        "relevant_env_var_names": relevant_keys,
     }
 
 app.add_middleware(
