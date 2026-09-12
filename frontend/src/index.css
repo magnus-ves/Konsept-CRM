@@ -37,7 +37,7 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background: linear-gradient(160deg, rgba(11, 30, 45, 0.82), rgba(63, 109, 143, 0.62));
+  background: linear-gradient(160deg, rgba(11, 30, 45, 0.42), rgba(63, 109, 143, 0.24));
   pointer-events: none;
   z-index: 0;
 }
@@ -50,18 +50,18 @@ body::before {
   flex-direction: column;
 }
 
-/* Liquid Glass (regular variant): the navigation layer only - bars,
-   toolbars, floating controls, buttons, the modal. Never stacked on
-   itself, and never applied to content (tables, kanban cards, notes). */
+/* Liquid Glass, throughout: translucent, blurred, with a soft inner
+   highlight for depth - lets the Oslo background show through everywhere. */
 .topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 14px 24px;
-  background: rgba(11, 30, 45, 0.45);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  backdrop-filter: blur(24px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(11, 30, 45, 0.32);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  backdrop-filter: blur(28px) saturate(200%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
   flex-wrap: wrap;
   gap: 10px;
 }
@@ -124,11 +124,13 @@ h2 {
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.94);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.32);
+  -webkit-backdrop-filter: blur(30px) saturate(190%);
+  backdrop-filter: blur(30px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.45);
   border-radius: 14px;
   padding: 16px;
-  box-shadow: 0 10px 30px rgba(11, 30, 45, 0.18);
+  box-shadow: 0 10px 30px rgba(11, 30, 45, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .stat-grid {
@@ -139,11 +141,13 @@ h2 {
 }
 
 .stat-tile {
-  background: rgba(255, 255, 255, 0.94);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.32);
+  -webkit-backdrop-filter: blur(30px) saturate(190%);
+  backdrop-filter: blur(30px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.45);
   border-radius: 14px;
   padding: 14px 16px;
-  box-shadow: 0 10px 30px rgba(11, 30, 45, 0.18);
+  box-shadow: 0 10px 30px rgba(11, 30, 45, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .stat-tile .num {
@@ -204,10 +208,11 @@ h2 {
   align-items: center;
   padding: 10px;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.16);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  backdrop-filter: blur(28px) saturate(200%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 input, select, textarea, button {
@@ -216,9 +221,11 @@ input, select, textarea, button {
 
 .input, select.input {
   padding: 9px 12px;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 8px;
-  background: var(--card);
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   color: var(--text);
 }
 
@@ -278,11 +285,13 @@ textarea.input {
 table {
   width: 100%;
   border-collapse: collapse;
-  background: rgba(255, 255, 255, 0.94);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.4);
+  -webkit-backdrop-filter: blur(30px) saturate(190%);
+  backdrop-filter: blur(30px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.45);
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(11, 30, 45, 0.18);
+  box-shadow: 0 10px 30px rgba(11, 30, 45, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 th, td {
@@ -294,7 +303,7 @@ th, td {
 }
 
 th {
-  background: var(--accent-soft);
+  background: rgba(255, 255, 255, 0.25);
   color: var(--navy);
   font-family: "Space Grotesk", sans-serif;
   font-weight: 500;
@@ -329,7 +338,9 @@ tr:last-child td {
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(11, 30, 45, 0.55);
+  background: rgba(11, 30, 45, 0.35);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -339,16 +350,16 @@ tr:last-child td {
 }
 
 .modal {
-  background: rgba(255, 255, 255, 0.85);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-  backdrop-filter: blur(28px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.45);
+  -webkit-backdrop-filter: blur(36px) saturate(200%);
+  backdrop-filter: blur(36px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
   border-radius: 22px;
   padding: 24px;
   width: 100%;
   max-width: 620px;
   margin-bottom: 40px;
-  box-shadow: 0 24px 60px rgba(11, 30, 45, 0.35);
+  box-shadow: 0 24px 60px rgba(11, 30, 45, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .modal-header {
@@ -400,7 +411,10 @@ tr:last-child td {
 }
 
 .note-entry {
-  background: var(--accent-soft);
+  background: rgba(255, 255, 255, 0.4);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 10px;
   padding: 8px 12px;
   font-size: 0.85rem;
@@ -420,13 +434,15 @@ tr:last-child td {
 }
 
 .kanban-col {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.28);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  backdrop-filter: blur(28px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.42);
   border-radius: 14px;
   min-width: 220px;
   flex: 1;
   padding: 12px;
-  box-shadow: 0 10px 30px rgba(11, 30, 45, 0.18);
+  box-shadow: 0 10px 30px rgba(11, 30, 45, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 .kanban-col.drag-over {
@@ -443,8 +459,10 @@ tr:last-child td {
 }
 
 .kanban-card {
-  background: var(--accent-soft);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.5);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
   border-radius: 10px;
   padding: 9px 12px;
   margin-bottom: 8px;
