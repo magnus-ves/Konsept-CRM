@@ -10,52 +10,20 @@ from sqlalchemy.orm import Session
 import crud
 import models
 import schemas
-from database import engine, get_db, SQLALCHEMY_DATABASE_URL
+from database import engine, get_db
 
 _db_init_error = None
 try:
     models.Base.metadata.create_all(bind=engine)
-except Exception as e:  # pragma: no cover - diagnostic path
+except Exception as e:
     _db_init_error = f"{type(e).__name__}: {e}"
-
-
-def _redacted_dsn():
-    from urllib.parse import urlsplit
-
-    parts = urlsplit(SQLALCHEMY_DATABASE_URL)
-    netloc = parts.netloc
-    if "@" in netloc:
-        creds, host = netloc.rsplit("@", 1)
-        user = creds.split(":", 1)[0]
-        netloc = f"{user}:***@{host}"
-    return f"{parts.scheme}://{netloc}{parts.path}?{parts.query}"
-
 
 app = FastAPI(title="Konsept Mini-CRM")
 
 
 @app.get("/api/health")
 def health():
-    import os
-
-    raw = (
-        os.environ.get("DATABASE_URL")
-        or os.environ.get("POSTGRES_URL")
-        or os.environ.get("POSTGRES_PRISMA_URL")
-        or os.environ.get("POSTGRES_URL_NON_POOLING")
-        or ""
-    )
-    if "@" in raw:
-        creds, host = raw.rsplit("@", 1)
-        scheme_user = creds.rsplit(":", 1)[0]
-        raw_redacted = f"{scheme_user}:***@{host}"
-    else:
-        raw_redacted = raw
-    return {
-        "database_init_error": _db_init_error,
-        "dsn": _redacted_dsn(),
-        "raw_env_dsn": raw_redacted,
-    }
+    return {"ok": _db_init_error is None}
 
 app.add_middleware(
     CORSMiddleware,
