@@ -74,6 +74,22 @@ def public_lead_intake(payload: schemas.PublicLeadIntake, db: Session = Depends(
     note_lines = ["Automatisk opprettet fra kontaktskjemaet på konsept-media.no."]
     if payload.message:
         note_lines.append(f"Melding: {payload.message}")
+
+    if payload.email:
+        try:
+            email_service.send_email(
+                payload.email,
+                "Takk for at du tok kontakt med Konsept",
+                (
+                    f"Hei {payload.name},\n\n"
+                    "Takk for at du tok kontakt! Magnus vil kontakte deg fortløpende.\n\n"
+                    "Vennlig hilsen\nKonsept"
+                ),
+            )
+            note_lines.append("Automatisk bekreftelses-e-post sendt til besøkende.")
+        except email_service.EmailError as e:
+            note_lines.append(f"Klarte ikke sende bekreftelses-e-post: {e}")
+
     crud.add_note(db, lead.id, schemas.NoteCreate(text="\n".join(note_lines)))
     return crud.get_lead(db, lead.id)
 
