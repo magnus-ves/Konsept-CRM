@@ -65,6 +65,14 @@ class EmailSend(BaseModel):
     message: str
 
 
+class PublicLeadIntake(BaseModel):
+    name: str
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    message: Optional[str] = None
+    services: Optional[str] = None
+
+
 class LeadOut(LeadBase):
     model_config = ConfigDict(from_attributes=True)
 

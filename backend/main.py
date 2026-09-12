@@ -55,6 +55,31 @@ def create_lead(lead: schemas.LeadCreate, db: Session = Depends(get_db)):
     return crud.create_lead(db, lead)
 
 
+@app.post("/api/public/leads", response_model=schemas.LeadOut)
+def public_lead_intake(payload: schemas.PublicLeadIntake, db: Session = Depends(get_db)):
+    """Offentlig, ubeskyttet endepunkt for kontaktskjemaet på konsept-media.no."""
+    lead = crud.create_lead(
+        db,
+        schemas.LeadCreate(
+            company_name=payload.name,
+            contact_person=payload.name,
+            email=payload.email,
+            phone=payload.phone,
+            industry=payload.services,
+            missing_items=payload.message,
+            status=models.LeadStatus.NY,
+            priority=models.LeadPriority.MIDDELS,
+            last_contact_date=datetime.utcnow(),
+        ),
+    )
+    crud.add_note(
+        db,
+        lead.id,
+        schemas.NoteCreate(text="Automatisk opprettet fra kontaktskjemaet på konsept-media.no"),
+    )
+    return crud.get_lead(db, lead.id)
+
+
 @app.get("/api/leads/{lead_id}", response_model=schemas.LeadOut)
 def get_lead(lead_id: int, db: Session = Depends(get_db)):
     lead = crud.get_lead(db, lead_id)
