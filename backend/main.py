@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 import crud
 import models
 import schemas
-from database import engine, get_db
+from database import engine, get_db, SQLALCHEMY_DATABASE_URL
 
 _db_init_error = None
 try:
@@ -18,12 +18,25 @@ try:
 except Exception as e:  # pragma: no cover - diagnostic path
     _db_init_error = f"{type(e).__name__}: {e}"
 
+
+def _redacted_dsn():
+    from urllib.parse import urlsplit
+
+    parts = urlsplit(SQLALCHEMY_DATABASE_URL)
+    netloc = parts.netloc
+    if "@" in netloc:
+        creds, host = netloc.rsplit("@", 1)
+        user = creds.split(":", 1)[0]
+        netloc = f"{user}:***@{host}"
+    return f"{parts.scheme}://{netloc}{parts.path}?{parts.query}"
+
+
 app = FastAPI(title="Konsept Mini-CRM")
 
 
 @app.get("/api/health")
 def health():
-    return {"database_init_error": _db_init_error}
+    return {"database_init_error": _db_init_error, "dsn": _redacted_dsn()}
 
 app.add_middleware(
     CORSMiddleware,
