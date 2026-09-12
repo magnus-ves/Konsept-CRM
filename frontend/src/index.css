@@ -61,11 +61,15 @@ body::before {
 }
 
 .brand {
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  font-size: 1.05rem;
-  color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.brand-logo {
+  display: block;
+  height: 28px;
+  width: auto;
+  filter: brightness(0) invert(1);
 }
 
 .nav {

@@ -2,12 +2,15 @@ import { Routes, Route, NavLink } from "react-router-dom";
 import Dashboard from "./pages/Dashboard.jsx";
 import LeadsList from "./pages/LeadsList.jsx";
 import KanbanBoard from "./pages/KanbanBoard.jsx";
+import konseptLogo from "./assets/konsept-logo-full.svg";
 
 export default function App() {
   return (
     <div className="app">
       <header className="topbar">
-        <div className="brand">Konsept · Mini-CRM</div>
+        <div className="brand">
+          <img src={konseptLogo} alt="Konsept" className="brand-logo" />
+        </div>
         <nav className="nav">
           <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>
             Oversikt
