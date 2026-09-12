@@ -65,18 +65,16 @@ def public_lead_intake(payload: schemas.PublicLeadIntake, db: Session = Depends(
             contact_person=payload.name,
             email=payload.email,
             phone=payload.phone,
-            industry=payload.services,
-            missing_items=payload.message,
+            missing_items=payload.services,
             status=models.LeadStatus.NY,
             priority=models.LeadPriority.MIDDELS,
             last_contact_date=datetime.utcnow(),
         ),
     )
-    crud.add_note(
-        db,
-        lead.id,
-        schemas.NoteCreate(text="Automatisk opprettet fra kontaktskjemaet på konsept-media.no"),
-    )
+    note_lines = ["Automatisk opprettet fra kontaktskjemaet på konsept-media.no."]
+    if payload.message:
+        note_lines.append(f"Melding: {payload.message}")
+    crud.add_note(db, lead.id, schemas.NoteCreate(text="\n".join(note_lines)))
     return crud.get_lead(db, lead.id)
 
 
