@@ -28,23 +28,40 @@
 
 body {
   margin: 0;
-  background: var(--bg);
   color: var(--text);
+  background: var(--navy) url("./assets/hero-oslo.jpg") center / cover fixed no-repeat;
+  min-height: 100vh;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(11, 30, 45, 0.82), rgba(63, 109, 143, 0.62));
+  pointer-events: none;
+  z-index: 0;
 }
 
 .app {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
+/* Liquid Glass (regular variant): the navigation layer only - bars,
+   toolbars, floating controls, buttons, the modal. Never stacked on
+   itself, and never applied to content (tables, kanban cards, notes). */
 .topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 14px 24px;
-  background: var(--navy);
-  border-bottom: 1px solid var(--navy-soft);
+  background: rgba(11, 30, 45, 0.45);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
   flex-wrap: wrap;
   gap: 10px;
 }
@@ -77,7 +94,7 @@ body {
 }
 
 .nav a.active {
-  background: var(--ink);
+  background: rgba(255, 255, 255, 0.92);
   color: var(--navy);
   font-weight: 600;
 }
@@ -107,10 +124,11 @@ h2 {
 }
 
 .card {
-  background: var(--card);
+  background: rgba(255, 255, 255, 0.94);
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 16px;
+  box-shadow: 0 10px 30px rgba(11, 30, 45, 0.18);
 }
 
 .stat-grid {
@@ -121,10 +139,11 @@ h2 {
 }
 
 .stat-tile {
-  background: var(--card);
+  background: rgba(255, 255, 255, 0.94);
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 14px 16px;
+  box-shadow: 0 10px 30px rgba(11, 30, 45, 0.18);
 }
 
 .stat-tile .num {
@@ -183,6 +202,12 @@ h2 {
   gap: 8px;
   margin-bottom: 14px;
   align-items: center;
+  padding: 10px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
 }
 
 input, select, textarea, button {
@@ -202,36 +227,43 @@ textarea.input {
 }
 
 .btn {
+  display: inline-flex;
+  align-items: center;
   padding: 9px 18px;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--card);
+  border: 1px solid rgba(11, 30, 45, 0.18);
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
   cursor: pointer;
   font-weight: 600;
   color: var(--text);
+  text-decoration: none;
   transition: transform 0.3s cubic-bezier(.2,.7,.2,1), background 0.25s ease, border-color 0.25s ease;
 }
 
 .btn:hover {
   border-color: var(--blue);
+  transform: translateY(-2px);
 }
 
+/* Tinted glass - reserved for the primary action, per Liquid Glass rules */
 .btn-primary {
-  background: var(--navy);
+  background: rgba(11, 30, 45, 0.78);
   color: #fff;
-  border-color: var(--navy);
+  border-color: rgba(11, 30, 45, 0.78);
 }
 
 .btn-primary:hover {
-  background: var(--blue);
-  border-color: var(--blue);
+  background: rgba(63, 109, 143, 0.85);
+  border-color: rgba(63, 109, 143, 0.85);
   transform: translateY(-2px);
 }
 
 .btn-danger {
   color: var(--danger);
-  border-color: var(--danger);
-  background: transparent;
+  border-color: rgba(179, 69, 92, 0.4);
+  background: rgba(255, 255, 255, 0.55);
 }
 
 .btn-sm {
@@ -246,10 +278,11 @@ textarea.input {
 table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--card);
+  background: rgba(255, 255, 255, 0.94);
   border: 1px solid var(--border);
   border-radius: 14px;
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(11, 30, 45, 0.18);
 }
 
 th, td {
@@ -306,12 +339,16 @@ tr:last-child td {
 }
 
 .modal {
-  background: var(--card);
-  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.85);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 22px;
   padding: 24px;
   width: 100%;
   max-width: 620px;
   margin-bottom: 40px;
+  box-shadow: 0 24px 60px rgba(11, 30, 45, 0.35);
 }
 
 .modal-header {
@@ -383,12 +420,13 @@ tr:last-child td {
 }
 
 .kanban-col {
-  background: var(--card);
+  background: rgba(255, 255, 255, 0.9);
   border: 1px solid var(--border);
   border-radius: 14px;
   min-width: 220px;
   flex: 1;
   padding: 12px;
+  box-shadow: 0 10px 30px rgba(11, 30, 45, 0.18);
 }
 
 .kanban-col.drag-over {
