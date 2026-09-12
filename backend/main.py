@@ -25,7 +25,10 @@ app = FastAPI(title="Konsept Mini-CRM")
 
 @app.get("/api/health")
 def health():
-    return {"ok": _db_init_error is None}
+    return {
+        "ok": _db_init_error is None,
+        "resend_configured": bool(email_service.RESEND_API_KEY),
+    }
 
 app.add_middleware(
     CORSMiddleware,
