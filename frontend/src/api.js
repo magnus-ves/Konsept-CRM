@@ -38,6 +38,11 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ text }),
     }),
+  sendEmail: (id, data) =>
+    request(`/leads/${id}/send-email`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
   getDashboard: () => request("/dashboard"),
   exportCsvUrl: () => `${BASE_URL}/export/csv`,
 };

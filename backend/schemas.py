@@ -60,6 +60,11 @@ class LeadStatusUpdate(BaseModel):
     status: LeadStatus
 
 
+class EmailSend(BaseModel):
+    subject: str
+    message: str
+
+
 class LeadOut(LeadBase):
     model_config = ConfigDict(from_attributes=True)
 

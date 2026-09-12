@@ -1,5 +1,6 @@
 import csv
 import io
+from datetime import datetime
 from typing import Optional, List
 
 from fastapi import FastAPI, Depends, HTTPException
@@ -8,6 +9,7 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
 import crud
+import email_service
 import models
 import schemas
 from database import engine, get_db
@@ -88,6 +90,30 @@ def add_note(lead_id: int, note: schemas.NoteCreate, db: Session = Depends(get_d
     if not lead:
         raise HTTPException(status_code=404, detail="Lead ikke funnet")
     return crud.add_note(db, lead_id, note)
+
+
+@app.post("/api/leads/{lead_id}/send-email", response_model=schemas.LeadOut)
+def send_lead_email(lead_id: int, payload: schemas.EmailSend, db: Session = Depends(get_db)):
+    lead = crud.get_lead(db, lead_id)
+    if not lead:
+        raise HTTPException(status_code=404, detail="Lead ikke funnet")
+    if not lead.email:
+        raise HTTPException(status_code=400, detail="Leaden har ingen e-postadresse registrert")
+
+    try:
+        email_service.send_email(lead.email, payload.subject, payload.message)
+    except email_service.EmailError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+
+    crud.add_note(
+        db,
+        lead_id,
+        schemas.NoteCreate(text=f"E-post sendt til {lead.email} — emne: «{payload.subject}»"),
+    )
+    updated = crud.update_lead(
+        db, lead_id, schemas.LeadUpdate(last_contact_date=datetime.utcnow())
+    )
+    return updated
 
 
 @app.get("/api/dashboard", response_model=schemas.DashboardStats)

@@ -43,6 +43,8 @@ backend på port 8000.
 - Tidsstemplet notatlogg per lead (overskriver ikke gammel tekst)
 - Dashboard med antall leads per status/prioritet og oppfølging denne uken
 - Eksport av alle leads til CSV
+- Send e-post direkte til en lead fra lead-kortet (via Resend) — loggføres
+  automatisk som et notat og oppdaterer "siste kontakt"
 
 ## Datamodell (lead)
 
@@ -52,11 +54,26 @@ Ikke aktuell), prioritet (Høy/Middels/Lav), hva som mangler hos kunden,
 dato for siste kontakt, dato for neste oppfølging, og en tidsstemplet
 notatlogg.
 
+## E-postutsendelse (Resend)
+
+For å kunne sende e-post fra en lead trenger backend en Resend API-nøkkel:
+
+1. Opprett en gratis konto på [resend.com](https://resend.com) (3000
+   e-poster/mnd gratis) og lag en API-nøkkel.
+2. Sett miljøvariabelen `RESEND_API_KEY` på backend-tjenesten (Vercel eller
+   Railway).
+3. Uten et verifisert domene sendes e-post fra Resends test-avsender
+   (`onboarding@resend.dev`). For å sende fra din egen adresse (f.eks.
+   `post@konsept-media.no`), verifiser domenet i Resend-dashbordet og sett
+   miljøvariabelen `EMAIL_FROM` til f.eks. `Konsept <post@konsept-media.no>`.
+
+Uten `RESEND_API_KEY` gir "Send e-post"-knappen en tydelig feilmelding i
+appen i stedet for å feile stille.
+
 ## Fremtidig utvidelse
 
 Strukturen er lagt til rette for å legge til senere:
 - Innlogging/autentisering (per nå kun én bruker)
-- Direkte e-postutsendelse
 - Kalenderintegrasjon
 
 ## Publisere appen

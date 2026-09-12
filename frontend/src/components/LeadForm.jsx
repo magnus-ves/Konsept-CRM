@@ -26,6 +26,10 @@ export default function LeadForm({ lead, onClose, onSaved }) {
   const [noteText, setNoteText] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [emailSubject, setEmailSubject] = useState("");
+  const [emailMessage, setEmailMessage] = useState("");
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailFeedback, setEmailFeedback] = useState("");
 
   useEffect(() => {
     if (lead) {
@@ -64,6 +68,26 @@ export default function LeadForm({ lead, onClose, onSaved }) {
       setError(err.message);
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleSendEmail() {
+    if (!lead || !emailSubject.trim() || !emailMessage.trim()) return;
+    setSendingEmail(true);
+    setEmailFeedback("");
+    try {
+      await api.sendEmail(lead.id, {
+        subject: emailSubject.trim(),
+        message: emailMessage.trim(),
+      });
+      setEmailFeedback("E-post sendt!");
+      setEmailSubject("");
+      setEmailMessage("");
+      onSaved(true);
+    } catch (err) {
+      setEmailFeedback(err.message);
+    } finally {
+      setSendingEmail(false);
     }
   }
 
@@ -225,6 +249,42 @@ export default function LeadForm({ lead, onClose, onSaved }) {
             </button>
           </div>
         </form>
+
+        {lead && lead.email && (
+          <div style={{ marginTop: 18, paddingTop: 12 }}>
+            <h2>Send e-post</h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <input
+                className="input"
+                placeholder="Emne"
+                value={emailSubject}
+                onChange={(e) => setEmailSubject(e.target.value)}
+              />
+              <textarea
+                className="input"
+                rows={4}
+                placeholder={`Skriv en melding til ${lead.contact_person || lead.company_name}…`}
+                value={emailMessage}
+                onChange={(e) => setEmailMessage(e.target.value)}
+              />
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleSendEmail}
+                  disabled={sendingEmail || !emailSubject.trim() || !emailMessage.trim()}
+                >
+                  {sendingEmail ? "Sender…" : `Send til ${lead.email}`}
+                </button>
+                {emailFeedback && <span style={{ fontSize: "0.85rem" }}>{emailFeedback}</span>}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {lead && !lead.email && (
+          <p className="empty">Legg til en e-postadresse for å kunne sende e-post til denne leaden.</p>
+        )}
 
         {lead && (
           <div style={{ marginTop: 18, paddingTop: 12 }}>
