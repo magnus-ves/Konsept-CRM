@@ -12,9 +12,18 @@ import models
 import schemas
 from database import engine, get_db
 
-models.Base.metadata.create_all(bind=engine)
+_db_init_error = None
+try:
+    models.Base.metadata.create_all(bind=engine)
+except Exception as e:  # pragma: no cover - diagnostic path
+    _db_init_error = f"{type(e).__name__}: {e}"
 
 app = FastAPI(title="Konsept Mini-CRM")
+
+
+@app.get("/api/health")
+def health():
+    return {"database_init_error": _db_init_error}
 
 app.add_middleware(
     CORSMiddleware,
