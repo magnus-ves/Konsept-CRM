@@ -36,7 +36,26 @@ app = FastAPI(title="Konsept Mini-CRM")
 
 @app.get("/api/health")
 def health():
-    return {"database_init_error": _db_init_error, "dsn": _redacted_dsn()}
+    import os
+
+    raw = (
+        os.environ.get("DATABASE_URL")
+        or os.environ.get("POSTGRES_URL")
+        or os.environ.get("POSTGRES_PRISMA_URL")
+        or os.environ.get("POSTGRES_URL_NON_POOLING")
+        or ""
+    )
+    if "@" in raw:
+        creds, host = raw.rsplit("@", 1)
+        scheme_user = creds.rsplit(":", 1)[0]
+        raw_redacted = f"{scheme_user}:***@{host}"
+    else:
+        raw_redacted = raw
+    return {
+        "database_init_error": _db_init_error,
+        "dsn": _redacted_dsn(),
+        "raw_env_dsn": raw_redacted,
+    }
 
 app.add_middleware(
     CORSMiddleware,
