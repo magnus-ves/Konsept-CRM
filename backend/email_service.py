@@ -38,6 +38,11 @@ def send_email(to: str, subject: str, message: str) -> None:
         headers={
             "Authorization": f"Bearer {RESEND_API_KEY}",
             "Content-Type": "application/json",
+            "Accept": "application/json",
+            # Uten en vanlig User-Agent blokkerer Cloudflare (foran Resends
+            # API) forespørselen som bot-trafikk (feil 1010) før den i det
+            # hele tatt når Resend.
+            "User-Agent": "Mozilla/5.0 (compatible; KonseptMiniCRM/1.0)",
         },
     )
 
