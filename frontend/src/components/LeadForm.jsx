@@ -86,7 +86,7 @@ export default function LeadForm({ lead, onClose, onSaved }) {
           <button className="btn btn-sm" onClick={onClose}>Lukk</button>
         </div>
 
-        {error && <p style={{ color: "#dc2626" }}>{error}</p>}
+        {error && <p style={{ color: "var(--danger)" }}>{error}</p>}
 
         <form onSubmit={handleSubmit}>
           <div className="form-grid">
@@ -227,7 +227,7 @@ export default function LeadForm({ lead, onClose, onSaved }) {
         </form>
 
         {lead && (
-          <div style={{ marginTop: 18, borderTop: "1px solid var(--border)", paddingTop: 12 }}>
+          <div style={{ marginTop: 18, paddingTop: 12 }}>
             <h2>Notatlogg</h2>
             <div className="notes-log">
               {(lead.notes || []).length === 0 && (

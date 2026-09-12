@@ -27,7 +27,7 @@ export default function Dashboard() {
           <div className="label">Oppfølging denne uken</div>
         </div>
         <div className="stat-tile">
-          <div className="num" style={{ color: stats.overdue > 0 ? "#dc2626" : undefined }}>
+          <div className="num" style={{ color: stats.overdue > 0 ? "var(--danger)" : undefined }}>
             {stats.overdue}
           </div>
           <div className="label">Forfalt oppfølging</div>

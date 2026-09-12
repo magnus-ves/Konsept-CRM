@@ -112,7 +112,7 @@ export default function LeadsList() {
         </button>
       </div>
 
-      {error && <p style={{ color: "#dc2626" }}>{error}</p>}
+      {error && <p style={{ color: "var(--danger)" }}>{error}</p>}
       {loading && <p className="empty">Laster…</p>}
 
       {!loading && leads.length === 0 && (
