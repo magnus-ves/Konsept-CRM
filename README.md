@@ -59,41 +59,53 @@ Strukturen er lagt til rette for å legge til senere:
 - Direkte e-postutsendelse
 - Kalenderintegrasjon
 
-## Publisere på Vercel
+## Publisere appen (anbefalt: Railway + Vercel)
 
-Appen består av to deler som må deployes hver for seg på Vercel (én
-frontend, én backend), fordi backend trenger en ekte database i
-produksjon — Vercels servere har ikke vedvarende diskplass til SQLite-filen.
+Vercel er laget for statiske sider/serverless-funksjoner og passer bra for
+frontend, men er unødvendig krøkkete for en vanlig Python-server med
+database. Enklest er derfor: **backend på Railway** (kjører som en vanlig
+langlevende server, ingen spesialkonfigurasjon nødvendig) og **frontend på
+Vercel** (som i dag).
 
-### 1. Opprett en gratis Postgres-database (Neon)
+### 1. Deploy backend på Railway
 
-1. Gå til [neon.tech](https://neon.tech) og opprett et gratis prosjekt.
-2. Kopier connection-stringen (starter med `postgresql://...`).
+1. Gå til [railway.app](https://railway.app) og logg inn med GitHub.
+2. **New Project → Deploy from GitHub repo** → velg dette repoet.
+3. Under prosjektinnstillinger, sett **Root Directory** til `backend`.
+   Railway oppdager automatisk Python via `requirements.txt` og bruker
+   `Procfile` (`web: uvicorn main:app --host 0.0.0.0 --port $PORT`) som
+   startkommando — ingen ekstra oppsett nødvendig.
+4. Klikk **New → Database → Add PostgreSQL** i samme prosjekt. Railway
+   kobler automatisk `DATABASE_URL` til backend-tjenesten din — koden
+   plukker denne opp uten at du trenger å gjøre noe manuelt.
+5. Under backend-tjenesten → **Settings → Networking → Generate Domain**
+   for å få en offentlig URL, f.eks. `https://konsept-crm-api.up.railway.app`.
+6. Test: åpne `https://konsept-crm-api.up.railway.app/api/leads` — du bør
+   få `[]` tilbake.
 
-### 2. Deploy backend
+### 2. Deploy frontend på Vercel
 
 1. Gå til [vercel.com](https://vercel.com) → **Add New… → Project** →
    velg dette repoet.
-2. Sett **Root Directory** til `backend`.
+2. La **Root Directory** stå på repo-roten (tom) — `vercel.json` i roten
+   bygger frontend automatisk.
 3. Under **Environment Variables**, legg til:
-   - `DATABASE_URL` = connection-stringen fra Neon.
-4. Deploy. Du får en URL som `https://konsept-crm-api.vercel.app`.
-5. Test at det virker: åpne `https://konsept-crm-api.vercel.app/api/leads`
-   i nettleseren — du bør få `[]` tilbake.
-
-### 3. Deploy frontend
-
-1. Gå tilbake til Vercel → **Add New… → Project** → velg samme repo på
-   nytt.
-2. Sett **Root Directory** til `frontend` (Vercel oppdager automatisk at
-   det er et Vite-prosjekt).
-3. Under **Environment Variables**, legg til:
-   - `VITE_API_URL` = `https://konsept-crm-api.vercel.app/api`
-     (URL-en fra steg 2, med `/api` på slutten).
+   - `VITE_API_URL` = `https://konsept-crm-api.up.railway.app/api`
+     (URL-en fra steg 1, med `/api` på slutten).
 4. Deploy. Du får en URL som `https://konsept-crm.vercel.app` — dette er
    appen du bruker i det daglige.
 
 ### Oppdateringer senere
 
-Push til branchen som er koblet til Vercel-prosjektene, så redeployer
-Vercel automatisk begge deler.
+Push til branchen som er koblet til Railway- og Vercel-prosjektene, så
+redeployer begge automatisk.
+
+### Alternativ: alt på Vercel (Postgres + serverless Python)
+
+Det er også mulig å kjøre backend som en Vercel-funksjon (se
+`backend/vercel.json` og `backend/api/index.py`), med en tilkoblet
+Postgres-database (Neon, Vercel Storage eller Nile). Dette krever litt mer
+feilsøking rundt Vercels Python-runtime enn Railway-veien over, men koden
+støtter begge deler — `database.py` leser `DATABASE_URL`, `POSTGRES_URL`,
+`POSTGRES_PRISMA_URL` eller `POSTGRES_URL_NON_POOLING`, uansett hvilken
+tjeneste du kobler til.
