@@ -4,7 +4,7 @@ import urllib.request
 import urllib.error
 
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
-EMAIL_FROM = os.environ.get("EMAIL_FROM", "Konsept <onboarding@resend.dev>")
+EMAIL_FROM = os.environ.get("EMAIL_FROM", "Konsept <post@konsept-media.no>")
 
 
 class EmailError(Exception):
