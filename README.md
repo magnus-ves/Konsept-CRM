@@ -67,6 +67,8 @@ For å kunne sende e-post fra en lead trenger backend en Resend API-nøkkel:
    `post@konsept-media.no`), verifiser domenet i Resend-dashbordet og sett
    miljøvariabelen `EMAIL_FROM` til f.eks. `Konsept <post@konsept-media.no>`.
 
+`RESEND_API_KEY` er koblet til for dette prosjektet.
+
 Uten `RESEND_API_KEY` gir "Send e-post"-knappen en tydelig feilmelding i
 appen i stedet for å feile stille.
 
