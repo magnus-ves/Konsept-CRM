@@ -1,4 +1,5 @@
 import { Routes, Route, NavLink } from "react-router-dom";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import Dashboard from "./pages/Dashboard.jsx";
 import LeadsList from "./pages/LeadsList.jsx";
 import KanbanBoard from "./pages/KanbanBoard.jsx";
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="/kanban" element={<KanbanBoard />} />
         </Routes>
       </main>
+      <SpeedInsights />
     </div>
   );
 }
