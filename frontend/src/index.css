@@ -442,6 +442,12 @@ th {
   gap: 12px;
   overflow-x: auto;
   padding-bottom: 10px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.kanban::-webkit-scrollbar {
+  display: none;
 }
 
 .kanban-col {
