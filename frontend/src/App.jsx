@@ -1,10 +1,27 @@
+import { useEffect, useState } from "react";
 import { Routes, Route, NavLink } from "react-router-dom";
 import Dashboard from "./pages/Dashboard.jsx";
 import LeadsList from "./pages/LeadsList.jsx";
 import KanbanBoard from "./pages/KanbanBoard.jsx";
+import AuthGate from "./components/AuthGate.jsx";
+import { getStoredPassword } from "./api.js";
 import konseptLogo from "./assets/konsept-logo-full.svg";
 
 export default function App() {
+  const [authed, setAuthed] = useState(!!getStoredPassword());
+
+  useEffect(() => {
+    function handleUnauthorized() {
+      setAuthed(false);
+    }
+    window.addEventListener("auth:unauthorized", handleUnauthorized);
+    return () => window.removeEventListener("auth:unauthorized", handleUnauthorized);
+  }, []);
+
+  if (!authed) {
+    return <AuthGate onSuccess={() => setAuthed(true)} />;
+  }
+
   return (
     <div className="app">
       <header className="topbar">

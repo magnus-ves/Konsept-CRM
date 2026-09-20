@@ -67,6 +67,20 @@ For å kunne sende e-post fra en lead trenger backend en Resend API-nøkkel:
    `post@konsept-media.no`), verifiser domenet i Resend-dashbordet og sett
    miljøvariabelen `EMAIL_FROM` til f.eks. `Konsept <post@konsept-media.no>`.
 
+## Passordbeskyttelse
+
+Appen er beskyttet med ett delt passord (kun én bruker, som avtalt).
+
+1. Sett miljøvariabelen `APP_PASSWORD` på backend-tjenesten til et passord
+   du velger.
+2. Redeploy. Neste gang noen åpner appen må de skrive inn passordet.
+
+Uten `APP_PASSWORD` satt er appen åpen for alle (ingen beskyttelse) - sett
+den derfor før du deler lenken til appen. Det offentlige kontaktskjema-
+endepunktet (`/api/public/leads`) og helsesjekken (`/api/health`) er
+unntatt, slik at kontaktskjemaet på konsept-media.no fortsatt fungerer
+uten passord.
+
 `RESEND_API_KEY` er koblet til for dette prosjektet.
 
 Uten `RESEND_API_KEY` gir "Send e-post"-knappen en tydelig feilmelding i

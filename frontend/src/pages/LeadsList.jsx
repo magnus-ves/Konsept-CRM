@@ -106,7 +106,9 @@ export default function LeadsList() {
           ))}
         </select>
         <div className="spacer" />
-        <a className="btn" href={api.exportCsvUrl()}>Eksporter CSV</a>
+        <button type="button" className="btn" onClick={() => api.exportCsv().catch((err) => setError(err.message))}>
+          Eksporter CSV
+        </button>
         <button className="btn btn-primary" onClick={() => { setEditingLead(null); setShowForm(true); }}>
           + Ny lead
         </button>

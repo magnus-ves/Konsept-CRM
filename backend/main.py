@@ -1,12 +1,14 @@
 import csv
 import io
+import os
 from datetime import datetime
 from typing import Optional, List
 
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from sqlalchemy.orm import Session
+from starlette.middleware.base import BaseHTTPMiddleware
 
 import crud
 import email_service
@@ -22,6 +24,26 @@ except Exception as e:
 
 app = FastAPI(title="Konsept Mini-CRM")
 
+# Endepunkter som må være tilgjengelige uten passord: helsesjekken, og
+# det offentlige kontaktskjema-endepunktet som konsept-media.no poster til.
+_PUBLIC_PATHS = {"/api/health", "/api/public/leads"}
+
+APP_PASSWORD = os.environ.get("APP_PASSWORD")
+
+
+class PasswordProtectMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        if (
+            not APP_PASSWORD
+            or request.method == "OPTIONS"
+            or request.url.path in _PUBLIC_PATHS
+            or not request.url.path.startswith("/api/")
+        ):
+            return await call_next(request)
+        if request.headers.get("x-app-password") != APP_PASSWORD:
+            return JSONResponse({"detail": "Feil passord"}, status_code=401)
+        return await call_next(request)
+
 
 @app.get("/api/health")
 def health():
@@ -29,6 +51,14 @@ def health():
         "ok": _db_init_error is None,
         "resend_configured": bool(email_service.RESEND_API_KEY),
     }
+
+
+@app.get("/api/auth/check")
+def auth_check():
+    return {"ok": True}
+
+
+app.add_middleware(PasswordProtectMiddleware)
 
 app.add_middleware(
     CORSMiddleware,
