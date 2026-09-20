@@ -69,7 +69,7 @@ app.add_middleware(
 )
 
 
-@app.get("/api/leads", response_model=List[schemas.LeadOut])
+@app.get("/api/leads", response_model=List[schemas.LeadListOut])
 def list_leads(
     status: Optional[str] = None,
     industry: Optional[str] = None,

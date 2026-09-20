@@ -73,6 +73,18 @@ class PublicLeadIntake(BaseModel):
     services: Optional[str] = None
 
 
+class LeadListOut(LeadBase):
+    """Brukes i listevisningen (tabell/kanban) - utelater notes med vilje,
+    siden det ville utløst ett eget spørring per lead (N+1) for data som
+    ikke vises der uansett."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    created_at: datetime
+    updated_at: datetime
+
+
 class LeadOut(LeadBase):
     model_config = ConfigDict(from_attributes=True)
 
